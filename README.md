@@ -45,8 +45,8 @@ Pass any graphical library as the startup argument. You can switch libraries at 
 
 | Game | File |
 |------|------|
-| <!-- GAME 1 --> | `lib/arcade_<!-- -->.so` |
-| <!-- GAME 2 --> | `lib/arcade_<!-- -->.so` |
+| Snake | `lib/arcade_snake.so` |
+| Minesweeper | `lib/arcade_minesweeper.so` |
 
 ## Project structure
 
