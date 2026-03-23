@@ -19,4 +19,6 @@ compile_commands.json
 *.swo
 *~
 arcade
+*.pdf
+
 
