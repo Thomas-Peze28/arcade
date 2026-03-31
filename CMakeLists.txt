@@ -17,3 +17,22 @@ add_executable(arcade
 target_include_directories(arcade PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(arcade PRIVATE dl)
 target_compile_options(arcade PRIVATE -Wall -Wextra -Werror)
+
+find_package(Curses REQUIRED)
+
+add_library(arcade_ncurses SHARED
+    src/graphics/ncurses/NCursesDisplay.cpp
+    src/abstracts/ADisplayModule.cpp
+)
+target_include_directories(arcade_ncurses PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(arcade_ncurses PRIVATE -Wall -Wextra -Werror -fno-gnu-unique)
+target_link_libraries(arcade_ncurses PRIVATE ${CURSES_LIBRARIES})
+set_target_properties(arcade_ncurses PROPERTIES PREFIX "")
+
+add_library(arcade_minesweeper SHARED
+    src/games/minesweeper/Minesweeper.cpp
+    src/abstracts/AGameModule.cpp
+)
+target_include_directories(arcade_minesweeper PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(arcade_minesweeper PRIVATE -Wall -Wextra -Werror -fno-gnu-unique)
+set_target_properties(arcade_minesweeper PROPERTIES PREFIX "")

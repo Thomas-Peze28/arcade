@@ -9,6 +9,8 @@
 
 #include "IArcade.hpp"
 #include "IDisplayModule.hpp"
+#include "Event.hpp"
+#include <vector>
 
 namespace arcade {
 
@@ -23,8 +25,9 @@ namespace arcade {
         // Tears down the game state. Called when leaving the game.
         virtual void stop()                          = 0;
         // Advances the game logic by `deltaTime` seconds.
+        // `events` contains all non-system input events for this frame.
         // Returns false when the game is over, true to keep running.
-        virtual bool update(float deltaTime)         = 0;
+        virtual bool update(float deltaTime, const std::vector<Event> &events) = 0;
         // Draws the current game state using the provided display module.
         virtual void render(IDisplayModule *display) = 0;
 

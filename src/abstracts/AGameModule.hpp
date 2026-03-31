@@ -11,10 +11,10 @@ namespace arcade {
         AGameModule(const AGameModule &) = delete;
         AGameModule &operator=(const AGameModule &) = delete;
 
-        void init(IDisplayModule *display) override = 0;
-        void stop()                        override;
-        bool update(float deltaTime)       override = 0;
-        void render(IDisplayModule *display) override = 0;
+        void init(IDisplayModule *display)                                override = 0;
+        void stop()                                                       override;
+        bool update(float deltaTime, const std::vector<Event> &events)   override = 0;
+        void render(IDisplayModule *display)                              override = 0;
 
         int getScore() const override;
 
