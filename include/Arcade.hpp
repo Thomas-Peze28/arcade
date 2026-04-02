@@ -4,3 +4,8 @@
 ** File description:
 ** Arcade
 */
+
+#ifndef ARCADE_HPP
+#define ARCADE_HPP
+
+#endif /* ARCADE_HPP_ */
