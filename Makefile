@@ -17,8 +17,8 @@ CXXFLAGS    =   -Wextra -Wall -std=c++20 -fno-gnu-unique
 # --- Configuration ---
 NAME =   arcade
 
-SRC  =   src/main.cpp \
-		 src/Arcade.cpp \
+SRC  =   src/Arcade.cpp \
+		 
 
 OBJ  =   $(SRC:.cpp=.o)
 INC  =   -I ./include
