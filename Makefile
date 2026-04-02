@@ -21,7 +21,7 @@ SRC  =   src/Arcade.cpp \
 		 
 
 OBJ  =   $(SRC:.cpp=.o)
-INC  =   -I ./include
+CPPFLAGS =   -I ./include/
 
 .SILENT:
 
@@ -29,7 +29,7 @@ all:    $(NAME)
 
 # Compilation
 $(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(INC)
+	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(CPPFLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Binary '$(NAME)' compiled successfully.\n"
 
 clean:
