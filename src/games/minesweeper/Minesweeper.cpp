@@ -146,6 +146,25 @@ namespace arcade {
         for (const Event &event : events) {
             if (_gameOver || _won)
                 break;
+            if (event.type == EventType::MOUSE) {
+                Vec2i cell = {event.mousePos.x - BOARD_OFF_X, event.mousePos.y - BOARD_OFF_Y};
+                if (!isInBounds(cell))
+                    continue;
+                _cursor = cell;
+                if (event.mouseButton == MouseButton::LEFT) {
+                    revealCell(cell);
+                } else if (event.mouseButton == MouseButton::RIGHT) {
+                    Cell &c = _cells[cell.y][cell.x];
+                    if (c.state == CellState::HIDDEN) {
+                        c.state = CellState::FLAGGED;
+                        _minesLeft--;
+                    } else if (c.state == CellState::FLAGGED) {
+                        c.state = CellState::HIDDEN;
+                        _minesLeft++;
+                    }
+                }
+                continue;
+            }
             switch (event.key) {
                 case KeyCode::UP:    _cursor.y = std::max(0, _cursor.y - 1);              break;
                 case KeyCode::DOWN:  _cursor.y = std::min(BOARD_H - 1, _cursor.y + 1);   break;

@@ -5,8 +5,9 @@ A retro gaming platform built in C++ using dynamic libraries loaded at runtime.
 ## Build
 
 ```bash
-mkdir build && cd build
-cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+mkdir -p build
+cd build
+cmake ..
 cmake --build .
 cd ..
 ```
