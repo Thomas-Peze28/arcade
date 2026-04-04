@@ -30,8 +30,10 @@ namespace arcade {
         _gameOver   = false;
         _won        = false;
         _minesLeft  = MINE_COUNT;
-        _cursor     = {BOARD_W / 2, BOARD_H / 2};
-        _score      = 0;
+        _cursor         = {BOARD_W / 2, BOARD_H / 2};
+        _score          = 0;
+        _lastClickCell  = {-1, -1};
+        _lastClickTime  = {};
 
         for (int y = 0; y < BOARD_H; y++)
             for (int x = 0; x < BOARD_W; x++)
@@ -104,6 +106,35 @@ namespace arcade {
                     _cells[y][x].state = CellState::REVEALED;
     }
 
+    void Minesweeper::chordReveal(Vec2i pos)
+    {
+        const Cell &cell = _cells[pos.y][pos.x];
+        if (cell.state != CellState::REVEALED || cell.adjacentCount == 0)
+            return;
+
+        int flagCount = 0;
+        for (int dy = -1; dy <= 1; dy++)
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0)
+                    continue;
+                Vec2i nb = {pos.x + dx, pos.y + dy};
+                if (isInBounds(nb) && _cells[nb.y][nb.x].state == CellState::FLAGGED)
+                    flagCount++;
+            }
+
+        if (flagCount != cell.adjacentCount)
+            return;
+
+        for (int dy = -1; dy <= 1; dy++)
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0)
+                    continue;
+                Vec2i nb = {pos.x + dx, pos.y + dy};
+                if (isInBounds(nb) && _cells[nb.y][nb.x].state == CellState::HIDDEN)
+                    revealCell(nb);
+            }
+    }
+
     void Minesweeper::revealCell(Vec2i pos)
     {
         if (!isInBounds(pos))
@@ -152,7 +183,19 @@ namespace arcade {
                     continue;
                 _cursor = cell;
                 if (event.mouseButton == MouseButton::LEFT) {
-                    revealCell(cell);
+                    auto now     = Clock::now();
+                    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                       now - _lastClickTime).count();
+                    if (elapsed < DOUBLE_CLICK_MS
+                            && cell.x == _lastClickCell.x
+                            && cell.y == _lastClickCell.y) {
+                        chordReveal(cell);
+                        _lastClickCell = {-1, -1};
+                    } else {
+                        revealCell(cell);
+                        _lastClickCell = cell;
+                        _lastClickTime = now;
+                    }
                 } else if (event.mouseButton == MouseButton::RIGHT) {
                     Cell &c = _cells[cell.y][cell.x];
                     if (c.state == CellState::HIDDEN) {
