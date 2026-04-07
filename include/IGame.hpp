@@ -9,6 +9,8 @@
 #define IGAME_H
 
 #include <string>
+#include <vector>
+#include "Variables.hpp"
 
 namespace Arcade {
     class IGame {
@@ -17,6 +19,10 @@ namespace Arcade {
             virtual void init() = 0;
             virtual void stop() = 0;
             virtual const std::string &getName() const = 0;
+
+            virtual void handleInput(Arcade::Input input) = 0;
+
+            virtual const std::vector<Arcade::Object> &getEntities() const = 0;
     };
 }
 
