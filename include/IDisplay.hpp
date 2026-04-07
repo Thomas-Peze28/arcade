@@ -24,7 +24,7 @@ namespace Arcade {
             virtual void clear() = 0;
             virtual void display() = 0;
             virtual void drawObject(const Arcade::Object &object) = 0;
-            virtual void drawText(const std::string &text, const Arcade::Position &pos) = 0;
+            virtual void drawText(const std::string &text, const Arcade::Position &pos, const Arcade::Color &color) = 0;
     };
 }
 #endif /* IDisplay_H */
