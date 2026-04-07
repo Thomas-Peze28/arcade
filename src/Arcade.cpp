@@ -7,7 +7,7 @@
 
 #include "Arcade.hpp"
 
-Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary)
+Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1")
 {
     _displayLoader = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
 
@@ -19,6 +19,46 @@ Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLi
     if (!_display)
         std::cerr << "Failed to get display instance from library: " << initialLibrary << std::endl;
     _display->init();
+    
+    loadLibs();
+}
+
+void Arcade::Core::loadLibs()
+{
+    _graphicLibs.clear();
+    _gameLibs.clear();
+
+    for (const auto & entry : std::filesystem::directory_iterator("./lib")) {
+        if (entry.path().extension() == ".so") {
+            std::string filename = entry.path().filename().string();
+            
+            if (filename.find("ncurses") != std::string::npos || 
+                filename.find("sdl2") != std::string::npos || 
+                filename.find("sfml") != std::string::npos) {
+                _graphicLibs.push_back(filename);
+            } else {
+                _gameLibs.push_back(filename);
+            }
+        }
+    }
+}
+
+void Arcade::Core::displayMenu()
+{
+    _display->drawText("=== ARCADE MAIN MENU ===", {10, 2}, Arcade::Color::WHITE);
+    _display->drawText("[ GRAPHICAL LIBRARIES ]", {5, 5}, Arcade::Color::WHITE);
+    int yOffset = 7;
+    for (size_t i = 0; i < _graphicLibs.size(); ++i) {
+        _display->drawText("- " + _graphicLibs[i], {5, yOffset}, Arcade::Color::WHITE);
+        yOffset++;
+    }
+    _display->drawText("[ GAME LIBRARIES ]", {35, 5}, Arcade::Color::WHITE);
+    yOffset = 7;
+    for (size_t i = 0; i < _gameLibs.size(); ++i) {
+        _display->drawText("- " + _gameLibs[i], {35, yOffset}, Arcade::Color::WHITE);
+        yOffset++;
+    }
+    _display->drawText("Player Name: " + _playerName, {10, yOffset + 3}, Arcade::Color::WHITE);
 }
 
 bool Arcade::Core::run()
@@ -26,10 +66,21 @@ bool Arcade::Core::run()
     _isRunning = true;
 
     while (_isRunning) {
-        std::cout << "Running Arcade Core with display: " << _display->getName() << std::endl;
-        _display->getInput();
+        Arcade::Input input = _display->getInput();
+
+        if (input == Arcade::Input::EXIT) {
+            _isRunning = false;
+        }
+
         _display->clear();
+
+        if (_isMenu) {
+            displayMenu();
+        } else {
+            std::cout << "Game is running... (input: " << static_cast<int>(input) << ")" << std::endl;
+        }
         _display->display();
+
         _isRunning = false;
     }
     return true;
