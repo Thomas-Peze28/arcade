@@ -45,20 +45,20 @@ void Arcade::Core::loadLibs()
 
 void Arcade::Core::displayMenu()
 {
-    _display->drawText("=== ARCADE MAIN MENU ===", {10, 2}, Arcade::Color::WHITE);
-    _display->drawText("[ GRAPHICAL LIBRARIES ]", {5, 5}, Arcade::Color::WHITE);
+    _display->drawText("=== ARCADE MAIN MENU ===", {10, 2}, Arcade::Color::RED);
+    _display->drawText("[ GRAPHICAL LIBRARIES ]", {5, 5}, Arcade::Color::BLUE);
     int yOffset = 7;
     for (size_t i = 0; i < _graphicLibs.size(); ++i) {
         _display->drawText("- " + _graphicLibs[i], {5, yOffset}, Arcade::Color::WHITE);
         yOffset++;
     }
-    _display->drawText("[ GAME LIBRARIES ]", {35, 5}, Arcade::Color::WHITE);
+    _display->drawText("[ GAME LIBRARIES ]", {35, 5}, Arcade::Color::BLUE);
     yOffset = 7;
     for (size_t i = 0; i < _gameLibs.size(); ++i) {
         _display->drawText("- " + _gameLibs[i], {35, yOffset}, Arcade::Color::WHITE);
         yOffset++;
     }
-    _display->drawText("Player Name: " + _playerName, {10, yOffset + 3}, Arcade::Color::WHITE);
+    _display->drawText("[Player Name]: " + _playerName, {10, yOffset + 3}, Arcade::Color::GREEN);
 }
 
 bool Arcade::Core::run()
@@ -81,7 +81,7 @@ bool Arcade::Core::run()
         }
         _display->display();
 
-        _isRunning = false;
+        //_isRunning = false;
     }
     return true;
 }
