@@ -25,6 +25,12 @@ CPPFLAGS =   -I ./include/
 
 .SILENT:
 
+core: all
+
+games: all
+
+graphicals: all
+
 all:    $(NAME)
 
 # Compilation
