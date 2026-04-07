@@ -48,3 +48,11 @@ add_library(arcade_minesweeper SHARED
 target_include_directories(arcade_minesweeper PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(arcade_minesweeper PRIVATE -Wall -Wextra -Werror -fno-gnu-unique)
 set_target_properties(arcade_minesweeper PROPERTIES PREFIX "")
+
+add_library(arcade_snake SHARED
+    src/games/snake/Snake.cpp
+    src/abstracts/AGameModule.cpp
+)
+target_include_directories(arcade_snake PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(arcade_snake PRIVATE -Wall -Wextra -Werror -fno-gnu-unique)
+set_target_properties(arcade_snake PROPERTIES PREFIX "")

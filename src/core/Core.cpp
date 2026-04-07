@@ -103,11 +103,22 @@ namespace arcade {
         _displayLoader.get()->open();
     }
 
+    IGameModule *Core::activeGame() const
+    {
+        auto it = _gameSlots.find(_gameIndex);
+        return it != _gameSlots.end() ? it->second->get() : nullptr;
+    }
+
     void Core::loadGame(size_t index)
     {
-        _gameLoader.unload();
-        _gameLoader.load(_gameLibs[index].path, "createGame");
-        _gameLoader.get()->init(_displayLoader.get());
+        _gameIndex = index;
+        if (_gameSlots.find(index) == _gameSlots.end()) {
+            _gameSlots[index] = std::make_unique<DLLoader<IGameModule>>();
+            _gameSlots[index]->load(_gameLibs[index].path, "createGame");
+            _gameSlots[index]->get()->init(_displayLoader.get());
+        } else {
+            _gameSlots[index]->get()->setDisplay(_displayLoader.get());
+        }
         _gameOverFrames = 0;
         _prevTime       = Clock::now();
     }
@@ -118,14 +129,14 @@ namespace arcade {
         _displayIndex = static_cast<size_t>((static_cast<int>(_displayIndex) + direction + count) % count);
         loadDisplay(_displayIndex);
         if (_inGame)
-            _gameLoader.get()->setDisplay(_displayLoader.get());
+            activeGame()->setDisplay(_displayLoader.get());
     }
 
     void Core::switchGame(int direction)
     {
-        int count  = static_cast<int>(_gameLibs.size());
-        _gameIndex = static_cast<size_t>((static_cast<int>(_gameIndex) + direction + count) % count);
-        loadGame(_gameIndex);
+        int    count = static_cast<int>(_gameLibs.size());
+        size_t next  = static_cast<size_t>((static_cast<int>(_gameIndex) + direction + count) % count);
+        loadGame(next);
     }
 
     void Core::runMenu()
@@ -199,7 +210,7 @@ namespace arcade {
     void Core::runGame()
     {
         IDisplayModule *display = _displayLoader.get();
-        IGameModule    *game    = _gameLoader.get();
+        IGameModule    *game    = activeGame();
 
         auto now = Clock::now();
         float dt = std::chrono::duration<float>(now - _prevTime).count();
@@ -211,20 +222,20 @@ namespace arcade {
         Event event;
         while (display->pollEvent(event)) {
             switch (event.key) {
-                case KeyCode::ESCAPE: _running = false;                     return;
-                case KeyCode::M:      _gameLoader.unload(); _inGame = false; return;
-                case KeyCode::R:      game->stop(); game->init(display);      break;
+                case KeyCode::ESCAPE: _running = false;                                  return;
+                case KeyCode::M:      _inGame = false;                                   return;
+                case KeyCode::R:      game->stop(); game->init(display);                 break;
                 case KeyCode::F1:     switchDisplay(-1);
                                       display = _displayLoader.get();
-                                      game    = _gameLoader.get();            break;
+                                      game    = activeGame();                            break;
                 case KeyCode::F2:     switchDisplay(+1);
                                       display = _displayLoader.get();
-                                      game    = _gameLoader.get();            break;
+                                      game    = activeGame();                            break;
                 case KeyCode::F3:     switchGame(-1);
-                                      game    = _gameLoader.get();            break;
+                                      game    = activeGame();                            break;
                 case KeyCode::F4:     switchGame(+1);
-                                      game    = _gameLoader.get();            break;
-                default:              gameEvents.push_back(event);            break;
+                                      game    = activeGame();                            break;
+                default:              gameEvents.push_back(event);                       break;
             }
         }
 
@@ -239,7 +250,7 @@ namespace arcade {
         if (!keepRunning) {
             _gameOverFrames++;
             if (_gameOverFrames >= GAME_OVER_LINGER_FRAMES) {
-                _gameLoader.unload();
+                _gameSlots.erase(_gameIndex);
                 _inGame = false;
             }
         }
