@@ -27,7 +27,12 @@ NCURSES_SRC =   src/display/NcursesDisplay.cpp
 NCURSES_OBJ =   $(NCURSES_SRC:.cpp=.o)
 NCURSES_LIB =   $(LIB_DIR)arcade_ncurses.so
 
-GRAPHICALS  =   $(NCURSES_LIB)
+SFML_SRC    =   src/display/SFMLDisplay.cpp
+SFML_OBJ    =   $(SFML_SRC:.cpp=.o)
+SFML_LIB    =   $(LIB_DIR)arcade_sfml.so
+SFML_FLAGS  =   -lsfml-graphics -lsfml-window -lsfml-system
+
+GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB)
 
 # --- Games Configuration ---
 GAMES       =
@@ -51,6 +56,12 @@ $(NAME): $(OBJ)
 $(NCURSES_LIB): $(NCURSES_OBJ)
 	@mkdir -p $(LIB_DIR)
 	$(CXX) -shared -o $@ $^ -lncurses
+	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
+
+# Compilation SFML
+$(SFML_LIB): $(SFML_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^ $(SFML_FLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 
 clean:
