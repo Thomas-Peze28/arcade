@@ -27,6 +27,9 @@ bool Arcade::Core::run()
 
     while (_isRunning) {
         std::cout << "Running Arcade Core with display: " << _display->getName() << std::endl;
+        _display->getInput();
+        _display->clear();
+        _display->display();
         _isRunning = false;
     }
     return true;
