@@ -12,39 +12,58 @@ YELLOW      =   \033[1;33m
 RESET       =   \033[0m
 
 CXX         =   g++
-CXXFLAGS    =   -Wextra -Wall -std=c++20 -fno-gnu-unique
+CXXFLAGS    =   -Wextra -Wall -std=c++20 -fno-gnu-unique -fPIC
+CPPFLAGS    =   -I ./include/
 
-# --- Configuration ---
-NAME =   arcade
+# --- Core Configuration ---
+NAME        =   arcade
+SRC         =   src/Arcade.cpp
+OBJ         =   $(SRC:.cpp=.o)
 
-SRC  =   src/Arcade.cpp \
-		 
+# --- Graphicals Configuration ---
+LIB_DIR     =   ./lib/
 
-OBJ  =   $(SRC:.cpp=.o)
-CPPFLAGS =   -I ./include/
+NCURSES_SRC =   src/display/NcursesDisplay.cpp
+NCURSES_OBJ =   $(NCURSES_SRC:.cpp=.o)
+NCURSES_LIB =   $(LIB_DIR)arcade_ncurses.so
+
+GRAPHICALS  =   $(NCURSES_LIB)
+
+# --- Games Configuration ---
+GAMES       =
 
 .SILENT:
 
-core: all
+all:    core games graphicals
 
-games: all
+core: $(NAME)
 
-graphicals: all
+games: $(GAMES)
 
-all:    $(NAME)
+graphicals: $(GRAPHICALS)
 
-# Compilation
+# Compilation Core
 $(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(CPPFLAGS)
+	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Binary '$(NAME)' compiled successfully.\n"
 
+# Compilation Ncurses
+$(NCURSES_LIB): $(NCURSES_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^ -lncurses
+	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
+
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean
 	rm -f $(NAME)
-	@printf "$(BLUE)[INFO]$(RESET) Binaries removed.\n"
+	rm -f $(GRAPHICALS)
+	rm -f $(GAMES)
+	@printf "$(BLUE)[INFO]$(RESET) Binaries and libraries removed.\n"
 
 re: fclean all
 	@printf "$(YELLOW)[INFO]$(RESET) Project rebuilt successfully.\n"
+
+.PHONY: all core games graphicals clean fclean re
