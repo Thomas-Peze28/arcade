@@ -32,7 +32,12 @@ SFML_OBJ    =   $(SFML_SRC:.cpp=.o)
 SFML_LIB    =   $(LIB_DIR)arcade_sfml.so
 SFML_FLAGS  =   -lsfml-graphics -lsfml-window -lsfml-system
 
-GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB)
+SDL2_SRC    =   src/display/SDL2Display.cpp
+SDL2_OBJ    =   $(SDL2_SRC:.cpp=.o)
+SDL2_LIB    =   $(LIB_DIR)arcade_sdl2.so
+SDL2_FLAGS  =   -lSDL2
+
+GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB)
 
 
 # --- Games Configuration ---
@@ -41,11 +46,6 @@ SNAKE_OBJ = $(SNAKE_SRC:.cpp=.o)
 SNAKE_LIB = $(LIB_DIR)arcade_snake.so
 
 GAMES     = $(SNAKE_LIB)
-
-$(SNAKE_LIB): $(SNAKE_OBJ)
-	@mkdir -p $(LIB_DIR)
-	$(CXX) -shared -o $@ $^
-	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
 
 .SILENT:
 
@@ -74,8 +74,20 @@ $(SFML_LIB): $(SFML_OBJ)
 	$(CXX) -shared -o $@ $^ $(SFML_FLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 
+# Compilation SDL2
+$(SDL2_LIB): $(SDL2_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^ $(SDL2_FLAGS)
+	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
+
+# Compilation Snake Game
+$(SNAKE_LIB): $(SNAKE_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^
+	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
+
 clean:
-	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SNAKE_OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SDL2_OBJ) $(SNAKE_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean
