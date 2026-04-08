@@ -9,11 +9,16 @@
 
 Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _isGameOver(false), _isWin(false), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
-    if (initialLibrary.find("ncurses") == std::string::npos && 
-        initialLibrary.find("sdl2") == std::string::npos && 
-        initialLibrary.find("sfml") == std::string::npos) {
-        std::cerr << "Invalid initial library: " << initialLibrary << std::endl;
-        return;
+    DLLoader<void> lib(initialLibrary);
+            
+    if (lib.isOpen()) {
+        std::string type = lib.getLibraryType();
+        
+        if (type != "display") {
+            throw std::runtime_error("Initial library is not a display module: " + initialLibrary);
+        }
+    } else {
+        throw std::runtime_error("Failed to load initial library: " + initialLibrary);
     }
 
     _displayLoaders[initialLibrary] = std::make_unique<DLLoader<IDisplay>>(initialLibrary);
@@ -263,10 +268,16 @@ int main(int ac, char **av)
         return 84;
     }
 
-    Arcade::Core core(av[1]);
+    try {
+        Arcade::Core core(av[1]);
 
-    int result = core.run();
-    if (!result)
+        int result = core.run();
+        if (!result)
+            return 84;
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
         return 84;
+    }
+
     return 0;
 }
