@@ -9,6 +9,13 @@
 
 Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
+    if (initialLibrary.find("ncurses") == std::string::npos && 
+        initialLibrary.find("sdl2") == std::string::npos && 
+        initialLibrary.find("sfml") == std::string::npos) {
+        std::cerr << "Invalid initial library: " << initialLibrary << std::endl;
+        return;
+    }
+
     _displayLoaders[initialLibrary] = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
 
     if (!_displayLoaders[initialLibrary]->isOpen())
@@ -60,16 +67,18 @@ void Arcade::Core::switchGraphicalLibrary(const std::string &libPath)
         _display.reset();
     }
 
-    _displayLoaders[libPath] = std::make_unique<DLLoader<IDisplayModule>>(libPath);
-    if (!_displayLoaders[libPath]->isOpen()) {
-        throw std::runtime_error("Failed to load library: " + libPath);
+    if (_displayLoaders.find(libPath) == _displayLoaders.end()) {
+        _displayLoaders[libPath] = std::make_unique<DLLoader<IDisplayModule>>(libPath);
+        
+        if (!_displayLoaders[libPath]->isOpen()) {
+            throw std::runtime_error("Failed to load library: " + libPath);
+        }
     }
 
     _display.reset(_displayLoaders[libPath]->getInstance("entryPoint"));
     if (!_display) {
         throw std::runtime_error("Failed to load display module from library: " + libPath);
     }
-
     _display->init();
     currentLibrary = libPath;
 }
@@ -136,6 +145,10 @@ bool Arcade::Core::run()
 {
     _isRunning = true;
 
+    if (!_display) {
+        return false;
+    }
+
     while (_isRunning) {
         Arcade::Input input = _display->getInput();
 
@@ -171,6 +184,9 @@ int main(int ac, char **av)
     }
 
     Arcade::Core core(av[1]);
-    core.run();
+
+    int result = core.run();
+    if (!result)
+        return 84;
     return 0;
 }
