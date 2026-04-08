@@ -46,6 +46,19 @@ class DLLoader {
             return handle != nullptr;
         }
 
+        std::string getLibraryType() {
+            if (!handle)
+                return "unknown";
+            
+            void *function = dlsym(handle, "getType");
+            if (!function) {
+                return "unknown"; 
+            }
+            
+            const char *(*type)() = reinterpret_cast<const char *(*)()>(function);
+            return std::string(type());
+        }
+
     private:
         void *handle;
 };
