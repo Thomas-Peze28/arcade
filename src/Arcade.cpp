@@ -37,6 +37,10 @@ Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLi
     }
 }
 
+Arcade::Core::~Core()
+{
+}
+
 void Arcade::Core::loadLibs()
 {
     _graphicLibs.clear();
@@ -105,6 +109,7 @@ void Arcade::Core::handleMenuInput(Arcade::Input input)
         }
         if (!_gameLibs.empty()) {
            std::cout << "Lancement du jeu : " << _gameLibs[_selectedGame] << " avec " << currentLibrary << std::endl;
+            loadGame("./lib/" + _gameLibs[_selectedGame]);
         }
     }
 }
@@ -141,6 +146,26 @@ void Arcade::Core::displayMenu()
     _display->drawText("ENTER: Start game.", {5, yOffset + 11}, Arcade::Color::WHITE);
 }
 
+void Arcade::Core::loadGame(const std::string &gamePath)
+{
+    if (_game) {
+        _game->stop();
+        _game.reset(); 
+    }
+
+    _gameLoader = std::make_unique<DLLoader<IGame>>(gamePath);
+    if (!_gameLoader->isOpen()) {
+        throw std::runtime_error("Failed to load game library: " + gamePath);
+    }
+    _game.reset(_gameLoader->getInstance("entryPoint"));
+    if (!_game) {
+        throw std::runtime_error("Failed to retrieve game instance from library: " + gamePath);
+    }
+
+    _game->init();
+    _isMenu = false; 
+}
+
 bool Arcade::Core::run()
 {
     _isRunning = true;
@@ -162,17 +187,24 @@ bool Arcade::Core::run()
             displayMenu();
             handleMenuInput(input);
         } else {
-            std::cout << "Game is running... (input: " << static_cast<int>(input) << ")" << std::endl;
+
+            _game->handleInput(input);
+
+            _game->update();
+
+            for (const auto &obj : _game->getEntities()) {
+                _display->drawObject(obj);
+            }
+
+            if (input == Arcade::Input::MENU) {
+                _isMenu = true;
+                _game->stop();
+                _game.reset();
+            }
         }
         _display->display();
-
-        //_isRunning = false;
     }
     return true;
-}
-
-Arcade::Core::~Core()
-{
 }
 
 int main(int ac, char **av)
