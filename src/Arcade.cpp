@@ -7,7 +7,7 @@
 
 #include "Arcade.hpp"
 
-Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
+Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _isGameOver(false), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
     if (initialLibrary.find("ncurses") == std::string::npos && 
         initialLibrary.find("sdl2") == std::string::npos && 
@@ -83,6 +83,27 @@ void Arcade::Core::switchGraphicalLibrary(const std::string &libPath)
     currentLibrary = libPath;
 }
 
+void Arcade::Core::loadGame(const std::string &libPath)
+{
+    if (_game) {
+        _game->stop();
+        _game.reset();
+    }
+
+    _gameLoader = std::make_unique<DLLoader<IGame>>(libPath);
+    
+    if (!_gameLoader->isOpen()) {
+        throw std::runtime_error("Failed to load game library: " + libPath);
+    }
+
+    _game.reset(_gameLoader->getInstance("entryPoint"));
+    if (!_game) {
+        throw std::runtime_error("Failed to load game module from library: " + libPath);
+    }
+    _game->init();
+    _isGameOver = false;
+}
+
 void Arcade::Core::handleMenuInput(Arcade::Input input)
 {
     if (input == Arcade::Input::UP && _selectedGame > 0) {
@@ -104,7 +125,8 @@ void Arcade::Core::handleMenuInput(Arcade::Input input)
             switchGraphicalLibrary("./lib/" + _graphicLibs[_selectedGraphic]);
         }
         if (!_gameLibs.empty()) {
-           std::cout << "Lancement du jeu : " << _gameLibs[_selectedGame] << " avec " << currentLibrary << std::endl;
+            loadGame("./lib/" + _gameLibs[_selectedGame]);
+            _isMenu = false;
         }
     }
 }
@@ -141,6 +163,12 @@ void Arcade::Core::displayMenu()
     _display->drawText("ENTER: Start game.", {5, yOffset + 11}, Arcade::Color::WHITE);
 }
 
+void Arcade::Core::displayGameOver()
+{
+    _display->drawText("GAME OVER", {20, 10}, Arcade::Color::RED);
+    _display->drawText("Returning to menu...", {15, 12}, Arcade::Color::WHITE);
+}
+
 bool Arcade::Core::run()
 {
     _isRunning = true;
@@ -154,6 +182,12 @@ bool Arcade::Core::run()
 
         if (input == Arcade::Input::EXIT) {
             _isRunning = false;
+        } else if (input == Arcade::Input::MENU) {
+            _isMenu = true;
+            if (_game) {
+                _game->stop();
+                _game.reset();
+            }
         }
     
         _display->clear();
@@ -161,8 +195,32 @@ bool Arcade::Core::run()
         if (_isMenu) {
             displayMenu();
             handleMenuInput(input);
+        } else if (_isGameOver) {
+            displayGameOver();
+            auto now = std::chrono::steady_clock::now();
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - _gameOverStart).count() >= 3) {
+                _isMenu = true;
+                _isGameOver = false;
+                _game.reset();
+            }
         } else {
-            std::cout << "Game is running... (input: " << static_cast<int>(input) << ")" << std::endl;
+            if (_game) {
+                _game->handleInput(input);
+                if (!_game->isRunning()) {
+                    if (_game->isGameOverByCollision()) {
+                        _isGameOver = true;
+                        _gameOverStart = std::chrono::steady_clock::now();
+                    } else {
+                        _isMenu = true;
+                        _game.reset();
+                    }
+                } else {
+                    const auto &entities = _game->getEntities();
+                    for (const auto &obj : entities) {
+                        _display->drawObject(obj);
+                    }
+                }
+            }
         }
         _display->display();
 

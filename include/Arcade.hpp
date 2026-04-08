@@ -12,6 +12,7 @@
 #include <memory>
 #include <filesystem>
 #include <map>
+#include <chrono>
 #include "DLLoader.hpp"
 #include "IGame.hpp"
 #include "IDisplay.hpp"
@@ -27,12 +28,16 @@ namespace Arcade {
         private:
 
             void displayMenu();
+            void displayGameOver();
             void loadLibs();
             void switchGraphicalLibrary(const std::string &libPath);
+            void loadGame(const std::string &libPath);
 
             std::string currentLibrary;
             bool _isRunning;
             bool _isMenu;
+            bool _isGameOver;
+            std::chrono::steady_clock::time_point _gameOverStart;
 
             std::map<std::string, std::unique_ptr<DLLoader<IDisplay>>> _displayLoaders;
             std::unique_ptr<DLLoader<IGame>> _gameLoader;
