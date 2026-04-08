@@ -48,14 +48,20 @@ void Arcade::Core::loadLibs()
 
     for (const auto & entry : std::filesystem::directory_iterator("./lib")) {
         if (entry.path().extension() == ".so") {
+            std::string filepath = entry.path().string();
             std::string filename = entry.path().filename().string();
             
-            if (filename.find("ncurses") != std::string::npos || 
-                filename.find("sdl2") != std::string::npos || 
-                filename.find("sfml") != std::string::npos) {
-                _graphicLibs.push_back(filename);
-            } else {
-                _gameLibs.push_back(filename);
+            DLLoader<void> lib(filepath);
+            
+            if (lib.isOpen()) {
+                std::string type = lib.getLibraryType();
+                
+                if (type == "game") {
+                    _gameLibs.push_back(filename);
+                } 
+                else if (type == "display") {
+                    _graphicLibs.push_back(filename);
+                }
             }
         }
     }
