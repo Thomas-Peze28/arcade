@@ -21,6 +21,7 @@ namespace Arcade {
             virtual const std::string &getName() const = 0;
 
             virtual void handleInput(Arcade::Input input) = 0;
+            virtual void update() = 0;
 
             virtual const std::vector<Arcade::Object> &getEntities() const = 0;
     };
