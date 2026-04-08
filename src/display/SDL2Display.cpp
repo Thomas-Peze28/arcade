@@ -52,17 +52,26 @@ namespace Arcade {
 
     void SDL2Display::stop()
     {
-        if (_renderer) {
-            SDL_DestroyRenderer(_renderer);
-        }
-        if (_window) {
-            SDL_DestroyWindow(_window);
-        }
         if (_font) {
             TTF_CloseFont(_font);
+            _font = nullptr;
         }
-        TTF_Quit();
-        SDL_Quit();
+
+        if (_renderer) {
+            SDL_DestroyRenderer(_renderer);
+            _renderer = nullptr;
+        }
+
+        if (_window) {
+            SDL_DestroyWindow(_window);
+            _window = nullptr;
+        }
+
+        if (TTF_WasInit()) {
+            TTF_Quit();
+        }
+        
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
     const std::string &SDL2Display::getName() const
