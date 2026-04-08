@@ -142,4 +142,8 @@ extern "C" {
     {
         return new Arcade::SFMLDisplay();
     }
+
+    const char *getType() {
+        return "display";
+    }
 }
