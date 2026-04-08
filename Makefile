@@ -65,7 +65,7 @@ $(SFML_LIB): $(SFML_OBJ)
 	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 
 clean:
-	rm -f $(OBJ) $(NCURSES_OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean
