@@ -37,6 +37,10 @@ Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLi
     }
 }
 
+Arcade::Core::~Core()
+{
+}
+
 void Arcade::Core::loadLibs()
 {
     _graphicLibs.clear();
@@ -223,14 +227,8 @@ bool Arcade::Core::run()
             }
         }
         _display->display();
-
-        //_isRunning = false;
     }
     return true;
-}
-
-Arcade::Core::~Core()
-{
 }
 
 int main(int ac, char **av)

@@ -52,6 +52,13 @@ public:
         return _collisionGameOver;
     }
 
+    void update() override {
+        // No automatic movement by default; input drives updates in this implementation.
+        if (_running) {
+            updateMap();
+        }
+    }
+
     void handleInput(Input input) override {
         if (!_running) return;
 

@@ -108,27 +108,29 @@ namespace Arcade {
 
         sf::Event event;
     
-        while (_window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                return Input::EXIT;
-            }
-            if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                    case sf::Keyboard::Up:
-                        return Input::UP;
-                    case sf::Keyboard::Down:
-                        return Input::DOWN;
-                    case sf::Keyboard::Left:
-                        return Input::LEFT;
-                    case sf::Keyboard::Right:
-                        return Input::RIGHT;
-                    case sf::Keyboard::Enter:
-                        return Input::ACTION;
-                    case sf::Keyboard::Escape:
-                        return Input::EXIT;
-                    default:
-                        break;
-                }
+        _window->pollEvent(event);
+
+        if (event.type == sf::Event::Closed) {
+            return Input::EXIT;
+        }
+        if (event.type == sf::Event::KeyPressed) {
+            switch (event.key.code) {
+                case sf::Keyboard::Up:
+                    return Input::UP;
+                case sf::Keyboard::Down:
+                    return Input::DOWN;
+                case sf::Keyboard::Left:
+                    return Input::LEFT;
+                case sf::Keyboard::Right:
+                    return Input::RIGHT;
+                case sf::Keyboard::Enter:
+                    return Input::ACTION;
+                case sf::Keyboard::Escape:
+                    return Input::EXIT;
+                case sf::Keyboard::M:
+                    return Input::MENU;
+                default:
+                    break;
             }
         }
         return Input::NONE;
