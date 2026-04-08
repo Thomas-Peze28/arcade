@@ -29,6 +29,7 @@ namespace Arcade {
 
             void displayMenu();
             void displayGameOver();
+            void displayWin();
             void loadLibs();
             void switchGraphicalLibrary(const std::string &libPath);
 
@@ -36,6 +37,7 @@ namespace Arcade {
             bool _isRunning;
             bool _isMenu;
             bool _isGameOver;
+            bool _isWin;
             std::chrono::steady_clock::time_point _gameOverStart;
 
             std::map<std::string, std::unique_ptr<DLLoader<IDisplay>>> _displayLoaders;

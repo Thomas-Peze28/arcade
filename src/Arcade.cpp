@@ -7,7 +7,7 @@
 
 #include "Arcade.hpp"
 
-Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _isGameOver(false), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
+Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _isGameOver(false), _isWin(false), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
     if (initialLibrary.find("ncurses") == std::string::npos && 
         initialLibrary.find("sdl2") == std::string::npos && 
@@ -106,6 +106,7 @@ void Arcade::Core::loadGame(const std::string &libPath)
     }
     _game->init();
     _isGameOver = false;
+    _isWin = false;
 }
 
 void Arcade::Core::handleMenuInput(Arcade::Input input)
@@ -173,6 +174,12 @@ void Arcade::Core::displayGameOver()
     _display->drawText("Returning to menu...", {15, 12}, Arcade::Color::WHITE);
 }
 
+void Arcade::Core::displayWin()
+{
+    _display->drawText("YOU WIN!", {20, 10}, Arcade::Color::GREEN);
+    _display->drawText("Returning to menu...", {15, 12}, Arcade::Color::WHITE);
+}
+
 bool Arcade::Core::run()
 {
     _isRunning = true;
@@ -207,12 +214,23 @@ bool Arcade::Core::run()
                 _isGameOver = false;
                 _game.reset();
             }
+        } else if (_isWin) {
+            displayWin();
+            auto now = std::chrono::steady_clock::now();
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - _gameOverStart).count() >= 3) {
+                _isMenu = true;
+                _isWin = false;
+                _game.reset();
+            }
         } else {
             if (_game) {
                 _game->handleInput(input);
                 if (!_game->isRunning()) {
                     if (_game->isGameOverByCollision()) {
                         _isGameOver = true;
+                        _gameOverStart = std::chrono::steady_clock::now();
+                    } else if (_game->isGameWon()) {
+                        _isWin = true;
                         _gameOverStart = std::chrono::steady_clock::now();
                     } else {
                         _isMenu = true;

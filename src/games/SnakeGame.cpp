@@ -32,12 +32,14 @@ public:
         _snake.push_back({8, 5}); // body '+'
         _snake.push_back({8, 6}); // head '0'
         placeFood();
+        _gameWon = false;
         updateMap();
     }
 
     void stop() override {
         _running = false;
         _collisionGameOver = false;
+        _gameWon = false;
     }
 
     const std::string &getName() const override {
@@ -50,6 +52,10 @@ public:
 
     bool isGameOverByCollision() const override {
         return _collisionGameOver;
+    }
+
+    bool isGameWon() const override {
+        return _gameWon;
     }
 
     void update() override {
@@ -113,6 +119,7 @@ private:
     std::string _name;
     bool _running;
     bool _collisionGameOver;
+    bool _gameWon;
     Direction _direction;
     std::vector<std::vector<char>> _map;
     std::deque<Position> _snake; // front is tail, back is head
@@ -150,7 +157,8 @@ private:
         }
         if (emptyCells.empty()) {
             _collisionGameOver = false;
-            _running = false; // No space for food, end without collision
+            _gameWon = (_snake.size() == 13 * 13);
+            _running = false; // No space for food, end either by win or by stuck board
             return;
         }
         std::random_device rd;
@@ -194,8 +202,9 @@ private:
                 return;
             }
         }
-        // No free tile, end without collision
+        // No free tile to grow the tail, end without collision
         _collisionGameOver = false;
+        _gameWon = false;
         _running = false;
     }
 
