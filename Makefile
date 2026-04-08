@@ -35,7 +35,7 @@ SFML_FLAGS  =   -lsfml-graphics -lsfml-window -lsfml-system
 SDL2_SRC    =   src/display/SDL2Display.cpp
 SDL2_OBJ    =   $(SDL2_SRC:.cpp=.o)
 SDL2_LIB    =   $(LIB_DIR)arcade_sdl2.so
-SDL2_FLAGS  =   -lSDL2
+SDL2_FLAGS  =   -lSDL2 -lSDL2_ttf
 
 GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB)
 
