@@ -136,7 +136,7 @@ namespace Arcade {
 }
 
 extern "C" {
-    Arcade::IDisplayModule *entryPoint()
+    Arcade::IDisplay *entryPoint()
     {
         return new Arcade::SFMLDisplay();
     }

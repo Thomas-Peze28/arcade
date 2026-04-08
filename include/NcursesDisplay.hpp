@@ -12,7 +12,7 @@
 #include <ncurses.h>
 
 namespace Arcade {
-    class NcursesDisplay : public IDisplayModule {
+    class NcursesDisplay : public IDisplay {
         public:
             NcursesDisplay();
             ~NcursesDisplay() override;

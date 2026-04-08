@@ -16,7 +16,7 @@
 #include <SFML/Window.hpp>
 
 namespace Arcade {
-    class SFMLDisplay : public IDisplayModule {
+    class SFMLDisplay : public IDisplay {
         public:
             SFMLDisplay();
             ~SFMLDisplay() override;

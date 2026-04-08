@@ -16,7 +16,7 @@ Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLi
         return;
     }
 
-    _displayLoaders[initialLibrary] = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
+    _displayLoaders[initialLibrary] = std::make_unique<DLLoader<IDisplay>>(initialLibrary);
 
     if (!_displayLoaders[initialLibrary]->isOpen())
         throw std::runtime_error("Failed to load library: " + initialLibrary);
@@ -68,7 +68,7 @@ void Arcade::Core::switchGraphicalLibrary(const std::string &libPath)
     }
 
     if (_displayLoaders.find(libPath) == _displayLoaders.end()) {
-        _displayLoaders[libPath] = std::make_unique<DLLoader<IDisplayModule>>(libPath);
+        _displayLoaders[libPath] = std::make_unique<DLLoader<IDisplay>>(libPath);
         
         if (!_displayLoaders[libPath]->isOpen()) {
             throw std::runtime_error("Failed to load library: " + libPath);

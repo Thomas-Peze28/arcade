@@ -34,10 +34,10 @@ namespace Arcade {
             bool _isRunning;
             bool _isMenu;
 
-            std::map<std::string, std::unique_ptr<DLLoader<IDisplayModule>>> _displayLoaders;
+            std::map<std::string, std::unique_ptr<DLLoader<IDisplay>>> _displayLoaders;
             std::unique_ptr<DLLoader<IGame>> _gameLoader;
 
-            std::unique_ptr<IDisplayModule> _display;
+            std::unique_ptr<IDisplay> _display;
             std::unique_ptr<IGame> _game;
 
             std::vector<std::string> _graphicLibs;
