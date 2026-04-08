@@ -51,11 +51,11 @@ namespace Arcade {
             std::string _playerName;
 
             void handleMenuInput(Arcade::Input input);
+            void handleInput(Arcade::Input input);
             size_t _selectedGraphic;
             size_t _selectedGame;
 
             void loadGame(const std::string &libPath);
-            void handleGameInput(Arcade::Input input);
     };
 }
 

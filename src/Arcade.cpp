@@ -191,6 +191,20 @@ void Arcade::Core::displayWin()
     _display->drawText("Returning to menu...", {15, 12}, Arcade::Color::WHITE);
 }
 
+void Arcade::Core::handleInput(Arcade::Input input)
+{
+    if (input == Arcade::Input::EXIT)
+            _isRunning = false;
+     if (input == Arcade::Input::MENU) {
+        _isMenu = true;
+        if (_game) {
+            _game->stop();
+            _game.reset();
+        }
+    }
+    
+}
+
 bool Arcade::Core::run()
 {
     _isRunning = true;
@@ -201,16 +215,8 @@ bool Arcade::Core::run()
 
     while (_isRunning) {
         Arcade::Input input = _display->getInput();
-
-        if (input == Arcade::Input::EXIT) {
-            _isRunning = false;
-        } else if (input == Arcade::Input::MENU) {
-            _isMenu = true;
-            if (_game) {
-                _game->stop();
-                _game.reset();
-            }
-        }
+    
+        handleInput(input);
     
         _display->clear();
 
