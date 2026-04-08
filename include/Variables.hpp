@@ -26,7 +26,11 @@ namespace Arcade {
         ACTION,
         RESTART,
         MENU,
-        EXIT
+        EXIT,
+        NEXT_GRAPHIC,
+        PREV_GRAPHIC,
+        NEXT_GAME,
+        PREV_GAME
     };
 
     struct Position {
