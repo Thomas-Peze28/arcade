@@ -9,17 +9,17 @@
 
 Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
-    _displayLoader = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
+    _displayLoaders[initialLibrary] = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
 
-    if (!_displayLoader->isOpen())
+    if (!_displayLoaders[initialLibrary]->isOpen())
         throw std::runtime_error("Failed to load library: " + initialLibrary);
 
-    _display.reset(_displayLoader->getInstance("entryPoint"));
+    _display.reset(_displayLoaders[initialLibrary]->getInstance("entryPoint"));
 
     if (!_display)
         throw std::runtime_error("Failed to load display module from library: " + initialLibrary);
+        
     _display->init();
-    
     loadLibs();
 
     for (size_t i = 0; i < _graphicLibs.size(); i++) {
@@ -60,14 +60,14 @@ void Arcade::Core::switchGraphicalLibrary(const std::string &libPath)
         _display.reset();
     }
 
-    _displayLoader = std::make_unique<DLLoader<IDisplayModule>>(libPath);
-    if (!_displayLoader->isOpen()) {
-        throw std::runtime_error("Impossible de charger la librairie: " + libPath);
+    _displayLoaders[libPath] = std::make_unique<DLLoader<IDisplayModule>>(libPath);
+    if (!_displayLoaders[libPath]->isOpen()) {
+        throw std::runtime_error("Failed to load library: " + libPath);
     }
 
-    _display.reset(_displayLoader->getInstance("entryPoint"));
+    _display.reset(_displayLoaders[libPath]->getInstance("entryPoint"));
     if (!_display) {
-        throw std::runtime_error("Pas d'entryPoint dans la librairie: " + libPath);
+        throw std::runtime_error("Failed to load display module from library: " + libPath);
     }
 
     _display->init();

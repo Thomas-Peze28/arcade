@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include <filesystem>
+#include <map>
 #include "DLLoader.hpp"
 #include "IGame.hpp"
 #include "IDisplay.hpp"
@@ -33,7 +34,7 @@ namespace Arcade {
             bool _isRunning;
             bool _isMenu;
 
-            std::unique_ptr<DLLoader<IDisplayModule>> _displayLoader;
+            std::map<std::string, std::unique_ptr<DLLoader<IDisplayModule>>> _displayLoaders;
             std::unique_ptr<DLLoader<IGame>> _gameLoader;
 
             std::unique_ptr<IDisplayModule> _display;
