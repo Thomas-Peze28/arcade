@@ -34,8 +34,18 @@ SFML_FLAGS  =   -lsfml-graphics -lsfml-window -lsfml-system
 
 GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB)
 
+
 # --- Games Configuration ---
-GAMES       =
+SNAKE_SRC = src/games/SnakeGame.cpp
+SNAKE_OBJ = $(SNAKE_SRC:.cpp=.o)
+SNAKE_LIB = $(LIB_DIR)arcade_snake.so
+
+GAMES     = $(SNAKE_LIB)
+
+$(SNAKE_LIB): $(SNAKE_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^
+	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
 
 .SILENT:
 
@@ -65,7 +75,7 @@ $(SFML_LIB): $(SFML_OBJ)
 	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 
 clean:
-	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SNAKE_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean
