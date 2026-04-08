@@ -27,6 +27,7 @@ namespace Arcade {
 
             void displayMenu();
             void loadLibs();
+            void switchGraphicalLibrary(const std::string &libPath);
 
             std::string currentLibrary;
             bool _isRunning;
@@ -41,6 +42,10 @@ namespace Arcade {
             std::vector<std::string> _graphicLibs;
             std::vector<std::string> _gameLibs;
             std::string _playerName;
+
+            void handleMenuInput(Arcade::Input input);
+            size_t _selectedGraphic;
+            size_t _selectedGame;
     };
 }
 

@@ -7,20 +7,27 @@
 
 #include "Arcade.hpp"
 
-Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1")
+Arcade::Core::Core(const std::string &initialLibrary) : currentLibrary(initialLibrary), _isRunning(false), _isMenu(true), _playerName("Player1"), _selectedGraphic(0), _selectedGame(0)
 {
     _displayLoader = std::make_unique<DLLoader<IDisplayModule>>(initialLibrary);
 
     if (!_displayLoader->isOpen())
-        std::cerr << "Failed to load library: " << initialLibrary << std::endl;
+        throw std::runtime_error("Failed to load library: " + initialLibrary);
 
     _display.reset(_displayLoader->getInstance("entryPoint"));
 
     if (!_display)
-        std::cerr << "Failed to get display instance from library: " << initialLibrary << std::endl;
+        throw std::runtime_error("Failed to load display module from library: " + initialLibrary);
     _display->init();
     
     loadLibs();
+
+    for (size_t i = 0; i < _graphicLibs.size(); i++) {
+        if ("./lib/" + _graphicLibs[i] == initialLibrary) {
+            _selectedGraphic = i;
+            return;
+        }
+    }
 }
 
 void Arcade::Core::loadLibs()
@@ -43,22 +50,86 @@ void Arcade::Core::loadLibs()
     }
 }
 
+void Arcade::Core::switchGraphicalLibrary(const std::string &libPath)
+{
+    if (currentLibrary == libPath)
+        return;
+    
+    if (_display) {
+        _display->stop();
+        _display.reset();
+    }
+
+    _displayLoader = std::make_unique<DLLoader<IDisplayModule>>(libPath);
+    if (!_displayLoader->isOpen()) {
+        throw std::runtime_error("Impossible de charger la librairie: " + libPath);
+    }
+
+    _display.reset(_displayLoader->getInstance("entryPoint"));
+    if (!_display) {
+        throw std::runtime_error("Pas d'entryPoint dans la librairie: " + libPath);
+    }
+
+    _display->init();
+    currentLibrary = libPath;
+}
+
+void Arcade::Core::handleMenuInput(Arcade::Input input)
+{
+    if (input == Arcade::Input::UP && _selectedGame > 0) {
+        _selectedGame--;
+    }
+    if (input == Arcade::Input::DOWN && _selectedGame < _gameLibs.size() - 1) {
+        _selectedGame++;
+    }
+
+    if (input == Arcade::Input::LEFT && _selectedGraphic > 0) {
+        _selectedGraphic--;
+    }
+    if (input == Arcade::Input::RIGHT && _selectedGraphic < _graphicLibs.size() - 1) {
+        _selectedGraphic++;
+    }
+
+    if (input == Arcade::Input::ACTION) {
+        if (!_graphicLibs.empty()) {
+            switchGraphicalLibrary("./lib/" + _graphicLibs[_selectedGraphic]);
+        }
+        if (!_gameLibs.empty()) {
+           std::cout << "Lancement du jeu : " << _gameLibs[_selectedGame] << " avec " << currentLibrary << std::endl;
+        }
+    }
+}
+
 void Arcade::Core::displayMenu()
 {
-    _display->drawText("=== ARCADE MAIN MENU ===", {10, 2}, Arcade::Color::RED);
+    _display->drawText("=== ARCADE MAIN MENU ===", {17, 2}, Arcade::Color::RED);
+    
     _display->drawText("[ GRAPHICAL LIBRARIES ]", {5, 5}, Arcade::Color::BLUE);
     int yOffset = 7;
     for (size_t i = 0; i < _graphicLibs.size(); ++i) {
-        _display->drawText("- " + _graphicLibs[i], {5, yOffset}, Arcade::Color::WHITE);
+        bool isSelected = (i == _selectedGraphic);
+        std::string prefix = isSelected ? "-> " : "   ";
+        Arcade::Color color = isSelected ? Arcade::Color::RED : Arcade::Color::WHITE;
+        _display->drawText(prefix + _graphicLibs[i], {5, yOffset}, color);
         yOffset++;
     }
+
     _display->drawText("[ GAME LIBRARIES ]", {35, 5}, Arcade::Color::BLUE);
     yOffset = 7;
     for (size_t i = 0; i < _gameLibs.size(); ++i) {
-        _display->drawText("- " + _gameLibs[i], {35, yOffset}, Arcade::Color::WHITE);
+        bool isSelected = (i == _selectedGame);
+        std::string prefix = isSelected ? "-> " : "   ";
+        Arcade::Color color = isSelected ? Arcade::Color::RED : Arcade::Color::WHITE;
+        _display->drawText(prefix + _gameLibs[i], {35, yOffset}, color);
         yOffset++;
     }
-    _display->drawText("[Player Name]: " + _playerName, {10, yOffset + 3}, Arcade::Color::GREEN);
+
+    _display->drawText("[Player Name]: " + _playerName, {17, yOffset + 3}, Arcade::Color::GREEN);
+    _display->drawText("[ START ]", {25, yOffset + 5}, Arcade::Color::WHITE);
+
+    _display->drawText("RIGHT/LEFT ARROWS: Navigate graphical libraries.", {5, yOffset + 7}, Arcade::Color::WHITE);
+    _display->drawText("UP/DOWN ARROWS: Navigate game libraries.", {5, yOffset + 9}, Arcade::Color::WHITE);
+    _display->drawText("ENTER: Start game.", {5, yOffset + 11}, Arcade::Color::WHITE);
 }
 
 bool Arcade::Core::run()
@@ -71,11 +142,12 @@ bool Arcade::Core::run()
         if (input == Arcade::Input::EXIT) {
             _isRunning = false;
         }
-
+    
         _display->clear();
 
         if (_isMenu) {
             displayMenu();
+            handleMenuInput(input);
         } else {
             std::cout << "Game is running... (input: " << static_cast<int>(input) << ")" << std::endl;
         }
