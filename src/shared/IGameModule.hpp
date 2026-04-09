@@ -21,9 +21,11 @@ namespace arcade {
         ~IGameModule() override = default;
 
         // Initializes the game state. Called once before the first update.
-        virtual void init(IDisplayModule *display)   = 0;
+        virtual void init(IDisplayModule *display)        = 0;
+        // Rebinds the display without resetting game state. Called on display switch.
+        virtual void setDisplay(IDisplayModule *display)  = 0;
         // Tears down the game state. Called when leaving the game.
-        virtual void stop()                          = 0;
+        virtual void stop()                               = 0;
         // Advances the game logic by `deltaTime` seconds.
         // `events` contains all non-system input events for this frame.
         // Returns false when the game is over, true to keep running.

@@ -2,6 +2,11 @@
 
 namespace arcade {
 
+    void AGameModule::setDisplay(IDisplayModule *display)
+    {
+        _display = display;
+    }
+
     void AGameModule::stop()
     {
         _running = false;

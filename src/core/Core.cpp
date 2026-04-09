@@ -118,7 +118,7 @@ namespace arcade {
         _displayIndex = static_cast<size_t>((static_cast<int>(_displayIndex) + direction + count) % count);
         loadDisplay(_displayIndex);
         if (_inGame)
-            _gameLoader.get()->init(_displayLoader.get());
+            _gameLoader.get()->setDisplay(_displayLoader.get());
     }
 
     void Core::switchGame(int direction)
