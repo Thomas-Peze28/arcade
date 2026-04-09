@@ -23,25 +23,29 @@ OBJ         =   $(SRC:.cpp=.o)
 # --- Graphicals Configuration ---
 LIB_DIR     =   ./lib/
 
-NCURSES_SRC =   src/display/NcursesDisplay.cpp
+# --- Ncurses Configuration ---
+NCURSES_SRC =   src/display/Ncurses/NcursesDisplay.cpp
 NCURSES_OBJ =   $(NCURSES_SRC:.cpp=.o)
 NCURSES_LIB =   $(LIB_DIR)arcade_ncurses.so
 
-SFML_SRC    =   src/display/SFMLDisplay.cpp
+# --- SFML Configuration ---
+SFML_SRC    =   src/display/SFML/SFMLDisplay.cpp
 SFML_OBJ    =   $(SFML_SRC:.cpp=.o)
 SFML_LIB    =   $(LIB_DIR)arcade_sfml.so
 SFML_FLAGS  =   -lsfml-graphics -lsfml-window -lsfml-system
 
-SDL2_SRC    =   src/display/SDL2Display.cpp
+# --- SDL2 Configuration ---
+SDL2_SRC    =   src/display/SDL2/SDL2Display.cpp
 SDL2_OBJ    =   $(SDL2_SRC:.cpp=.o)
 SDL2_LIB    =   $(LIB_DIR)arcade_sdl2.so
 SDL2_FLAGS  =   -lSDL2 -lSDL2_ttf -lSDL2_image
 
 GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB)
 
-
 # --- Games Configuration ---
-SNAKE_SRC   =   src/games/SnakeGame.cpp
+
+# --- Snake Game Configuration ---
+SNAKE_SRC   =   src/games/Snake/SnakeGame.cpp
 SNAKE_OBJ   =   $(SNAKE_SRC:.cpp=.o)
 SNAKE_LIB   =   $(LIB_DIR)arcade_snake.so
 
@@ -59,7 +63,7 @@ graphicals: $(GRAPHICALS)
 
 # Compilation Core
 $(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(CPPFLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Binary '$(NAME)' compiled successfully.\n"
 
 # Compilation Ncurses
