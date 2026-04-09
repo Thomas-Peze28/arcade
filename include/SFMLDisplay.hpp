@@ -39,6 +39,9 @@ namespace Arcade {
             int _scale;
             sf::Color translateColor(const Arcade::Color &color);
 
+            std::map<std::string, sf::Texture> _textures;
+            std::map<std::string, sf::Sprite> _sprites;
+
     };
 }
 

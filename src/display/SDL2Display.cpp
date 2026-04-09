@@ -206,4 +206,8 @@ extern "C" {
     {
         return new Arcade::SDL2Display();
     }
+
+    const char *getType() {
+        return "display";
+    }
 }

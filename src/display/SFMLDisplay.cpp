@@ -78,11 +78,38 @@ namespace Arcade {
         if (!_window || !_window->isOpen())
             return;
 
-        sf::RectangleShape rect(sf::Vector2f(_scale, _scale));
-    
-        rect.setPosition(object.pos.x * _scale, object.pos.y * _scale);
-        rect.setFillColor(translateColor(object.color));
-        _window->draw(rect);
+        bool spriteDraw = false;
+
+        if (!object.sprite_path.empty()) {
+            
+            if (_textures.find(object.sprite_path) == _textures.end()) {
+                if (_textures[object.sprite_path].loadFromFile(object.sprite_path)) {
+                    _sprites[object.sprite_path].setTexture(_textures[object.sprite_path]);
+                } else {
+                    std::cerr << "[SFML] Error: Unable to load texture " << object.sprite_path << std::endl;
+                }
+            }
+
+            if (_textures[object.sprite_path].getSize().x > 0) {
+                sf::Vector2u texSize = _textures[object.sprite_path].getSize();
+                
+                float scaleX = (float)_scale / texSize.x;
+                float scaleY = (float)_scale / texSize.y;
+                _sprites[object.sprite_path].setScale(scaleX, scaleY);
+                
+                _sprites[object.sprite_path].setPosition(object.pos.x * _scale, object.pos.y * _scale);
+                _window->draw(_sprites[object.sprite_path]);
+                
+                spriteDraw = true;
+            }
+        }
+
+        if (!spriteDraw) {
+            sf::RectangleShape rect(sf::Vector2f(_scale, _scale));
+            rect.setPosition(object.pos.x * _scale, object.pos.y * _scale);
+            rect.setFillColor(translateColor(object.color));
+            _window->draw(rect);
+        }
     }
 
     void SFMLDisplay::drawText(const std::string &text, const Arcade::Position &pos, const Arcade::Color &color)
@@ -141,5 +168,9 @@ extern "C" {
     Arcade::IDisplay *entryPoint()
     {
         return new Arcade::SFMLDisplay();
+    }
+
+    const char *getType() {
+        return "display";
     }
 }

@@ -133,4 +133,8 @@ extern "C" {
     {
         return new Arcade::NcursesDisplay();
     }
+
+    const char *getType() {
+        return "display";
+    }
 }
