@@ -214,6 +214,13 @@ void Arcade::Core::handleInput(Arcade::Input input)
             switchGraphicalLibrary("./lib/" + _graphicLibs[_selectedGraphic]);
         }
     }
+    if (input == Arcade::Input::RESTART) {
+        if (_game) {
+            _game->stop();
+            _game.reset();
+            loadGame("./lib/" + _gameLibs[_selectedGame]);
+        }
+     }
 }
 
 bool Arcade::Core::run()
