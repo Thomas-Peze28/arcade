@@ -26,11 +26,10 @@ public:
         _collisionGameOver = false;
         _direction = RIGHT;
         _snake.clear();
-        // Start snake at middle: positions (8,3) to (8,6): queue, body, body, head
-        _snake.push_back({8, 3}); // queue '.'
-        _snake.push_back({8, 4}); // body '+'
-        _snake.push_back({8, 5}); // body '+'
-        _snake.push_back({8, 6}); // head '0'
+        _snake.push_back({8, 3});
+        _snake.push_back({8, 4});
+        _snake.push_back({8, 5});
+        _snake.push_back({8, 6});
         placeFood();
         _gameWon = false;
         updateMap();
@@ -50,7 +49,7 @@ public:
         return _running;
     }
 
-    bool isGameOverByCollision() const override {
+    bool is_GameOver() const override {
         return _collisionGameOver;
     }
 
@@ -59,7 +58,6 @@ public:
     }
 
     void update() override {
-        // No automatic movement by default; input drives updates in this implementation.
         if (_running) {
             updateMap();
         }
@@ -70,7 +68,6 @@ public:
 
         bool moved = false;
 
-        // Change direction and move
         if (input == Input::UP && _direction != DOWN) {
             _direction = UP;
             moved = true;
@@ -89,17 +86,14 @@ public:
         }
 
         if (moved) {
-            // Move snake
             moveSnake();
 
-            // Check collisions
             if (checkCollision()) {
                 _collisionGameOver = true;
                 _running = false;
                 return;
             }
 
-            // Check food
             if (_map[_snake.back().y][_snake.back().x] == '@') {
                 growSnake();
                 placeFood();

@@ -226,7 +226,7 @@ bool Arcade::Core::run()
             if (_game) {
                 _game->handleInput(input);
                 if (!_game->isRunning()) {
-                    if (_game->isGameOverByCollision()) {
+                    if (_game->is_GameOver()) {
                         _isGameOver = true;
                         _gameOverStart = std::chrono::steady_clock::now();
                     } else if (_game->isGameWon()) {

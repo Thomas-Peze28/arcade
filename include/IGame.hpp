@@ -21,7 +21,7 @@ namespace Arcade {
             virtual const std::string &getName() const = 0;
             virtual bool isRunning() const = 0;
             virtual void handleInput(Arcade::Input input) = 0;
-            virtual bool isGameOverByCollision() const = 0;
+            virtual bool is_GameOver() const = 0;
             virtual bool isGameWon() const = 0;
             virtual void update() = 0;
 
