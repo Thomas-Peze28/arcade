@@ -26,11 +26,10 @@ public:
         _collisionGameOver = false;
         _direction = RIGHT;
         _snake.clear();
-        // Start snake at middle: positions (8,3) to (8,6): queue, body, body, head
-        _snake.push_back({8, 3}); // queue '.'
-        _snake.push_back({8, 4}); // body '+'
-        _snake.push_back({8, 5}); // body '+'
-        _snake.push_back({8, 6}); // head '0'
+        _snake.push_back({8, 3});
+        _snake.push_back({8, 4});
+        _snake.push_back({8, 5});
+        _snake.push_back({8, 6});
         placeFood();
         _gameWon = false;
         updateMap();
