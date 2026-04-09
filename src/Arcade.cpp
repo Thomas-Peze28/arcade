@@ -202,7 +202,6 @@ void Arcade::Core::handleInput(Arcade::Input input)
             _game.reset();
         }
     }
-    
 }
 
 bool Arcade::Core::run()
