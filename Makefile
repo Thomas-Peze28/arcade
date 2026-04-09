@@ -45,7 +45,7 @@ GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB)
 # --- Games Configuration ---
 
 # --- Snake Game Configuration ---
-SNAKE_SRC   =   src/games/Snake/SnakeGame.cpp
+SNAKE_SRC   =   src/games/Snake/Snake.cpp
 SNAKE_OBJ   =   $(SNAKE_SRC:.cpp=.o)
 SNAKE_LIB   =   $(LIB_DIR)arcade_snake.so
 

@@ -260,6 +260,7 @@ bool Arcade::Core::run()
         } else {
             if (_game) {
                 _game->handleInput(input);
+                _game->update();
                 if (!_game->isRunning()) {
                     if (_game->is_GameOver()) {
                         _isGameOver = true;
