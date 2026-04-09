@@ -202,6 +202,18 @@ void Arcade::Core::handleInput(Arcade::Input input)
             _game.reset();
         }
     }
+    if (input == Arcade::Input::NEXT_GRAPHIC) {
+        if (!_graphicLibs.empty()) {
+            _selectedGraphic = (_selectedGraphic + 1) % _graphicLibs.size();
+            switchGraphicalLibrary("./lib/" + _graphicLibs[_selectedGraphic]);
+        }
+    }
+    if (input == Arcade::Input::PREV_GRAPHIC) {
+        if (!_graphicLibs.empty()) {
+            _selectedGraphic = (_selectedGraphic + _graphicLibs.size() - 1) % _graphicLibs.size();
+            switchGraphicalLibrary("./lib/" + _graphicLibs[_selectedGraphic]);
+        }
+    }
 }
 
 bool Arcade::Core::run()

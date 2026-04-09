@@ -121,6 +121,14 @@ namespace Arcade {
                 return Input::EXIT;
             case ERR:
                 return Input::NONE;
+            case KEY_F(1):
+                return Input::NEXT_GRAPHIC;
+            case KEY_F(2):
+                return Input::PREV_GRAPHIC;
+            case KEY_F(3):
+                return Input::NEXT_GAME;
+            case KEY_F(4):
+                return Input::PREV_GAME;
             default:
                 return Input::NONE;
         }

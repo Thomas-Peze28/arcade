@@ -232,6 +232,14 @@ namespace Arcade {
                     return Input::MENU;
                 case SDLK_ESCAPE: 
                     return Input::EXIT;
+                case SDLK_F1:
+                    return Input::NEXT_GRAPHIC;
+                case SDLK_F2:
+                    return Input::PREV_GRAPHIC;
+                case SDLK_F3:
+                    return Input::NEXT_GAME;
+                case SDLK_F4:
+                    return Input::PREV_GAME;
                 default:          
                     return Input::NONE;
             }

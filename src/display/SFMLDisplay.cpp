@@ -156,6 +156,14 @@ namespace Arcade {
                     return Input::EXIT;
                 case sf::Keyboard::M:
                     return Input::MENU;
+                case sf::Keyboard::F1:
+                    return Input::NEXT_GRAPHIC;
+                case sf::Keyboard::F2:
+                    return Input::PREV_GRAPHIC;
+                case sf::Keyboard::F3:
+                    return Input::NEXT_GAME;
+                case sf::Keyboard::F4:
+                    return Input::PREV_GAME;
                 default:
                     break;
             }
