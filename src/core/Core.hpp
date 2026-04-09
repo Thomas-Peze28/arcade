@@ -5,6 +5,8 @@
 #include "../shared/IGameModule.hpp"
 #include "../shared/LibType.hpp"
 #include <chrono>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -30,16 +32,17 @@ namespace arcade {
         LibType     probeLibType(const std::string &path) const;
         std::string probeLibName(const std::string &path, const std::string &factorySymbol) const;
 
-        void loadDisplay(size_t index);
-        void loadGame(size_t index);
-        void switchDisplay(int direction);
-        void switchGame(int direction);
+        void        loadDisplay(size_t index);
+        void        loadGame(size_t index);
+        void        switchDisplay(int direction);
+        void        switchGame(int direction);
+        IGameModule *activeGame() const;
 
         void runMenu();
         void runGame();
 
-        DLLoader<IDisplayModule> _displayLoader;
-        DLLoader<IGameModule>    _gameLoader;
+        DLLoader<IDisplayModule>                                    _displayLoader;
+        std::map<size_t, std::unique_ptr<DLLoader<IGameModule>>>    _gameSlots;
 
         std::vector<LibInfo> _displayLibs;
         std::vector<LibInfo> _gameLibs;
