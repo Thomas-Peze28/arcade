@@ -29,6 +29,18 @@ target_compile_options(arcade_ncurses PRIVATE -Wall -Wextra -Werror -fno-gnu-uni
 target_link_libraries(arcade_ncurses PRIVATE ${CURSES_LIBRARIES})
 set_target_properties(arcade_ncurses PROPERTIES PREFIX "")
 
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
+add_library(arcade_sdl2 SHARED
+    src/graphics/sdl2/SDLDisplay.cpp
+    src/abstracts/ADisplayModule.cpp
+)
+target_include_directories(arcade_sdl2 PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(arcade_sdl2 PRIVATE -Wall -Wextra -Werror -fno-gnu-unique)
+target_link_libraries(arcade_sdl2 PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)
+set_target_properties(arcade_sdl2 PROPERTIES PREFIX "")
+
 add_library(arcade_minesweeper SHARED
     src/games/minesweeper/Minesweeper.cpp
     src/abstracts/AGameModule.cpp

@@ -34,6 +34,7 @@ namespace arcade {
         keypad(stdscr, TRUE);
         nodelay(stdscr, TRUE);
         curs_set(0);
+        mousemask(ALL_MOUSE_EVENTS, nullptr);
         start_color();
         use_default_colors();
         _pairCache.clear();
@@ -97,6 +98,22 @@ namespace arcade {
         if (ch == ERR)
             return false;
 
+        if (ch == KEY_MOUSE) {
+            MEVENT me;
+            if (getmouse(&me) != OK)
+                return false;
+            event.type     = EventType::MOUSE;
+            event.mousePos = {me.x / 2, me.y};
+            if (me.bstate & BUTTON1_PRESSED)
+                event.mouseButton = MouseButton::LEFT;
+            else if (me.bstate & BUTTON3_PRESSED)
+                event.mouseButton = MouseButton::RIGHT;
+            else
+                return false;
+            return true;
+        }
+
+        event.type = EventType::KEYBOARD;
         switch (ch) {
             case KEY_UP:    event.key = KeyCode::UP;     break;
             case KEY_DOWN:  event.key = KeyCode::DOWN;   break;
