@@ -11,7 +11,7 @@
 
 namespace Arcade {
 
-    Snake::Snake() : _name("Snake"),  _map_size(30), _speedMs(100), _isRunning(false), _isGameOver(false), _isWin(false)
+    Snake::Snake() : _name("Snake"),  _map_size(30), _speedMs(100), _isRunning(false), _isGameOver(false), _isWin(false), _offsetX(15), _offsetY(5)
     {
         std::srand(std::time(nullptr));
     }
@@ -19,9 +19,9 @@ namespace Arcade {
     void Snake::init()
     {
         _body.clear();
-        _body.push_back({10, 10});
-        _body.push_back({10, 11});
-        _body.push_back({10, 12});
+        _body.push_back({10 + _offsetX, 10 + _offsetY});
+        _body.push_back({10 + _offsetX, 11 + _offsetY});
+        _body.push_back({10 + _offsetX, 12 + _offsetY});
 
         _direction = Arcade::Input::UP;
         _nextDirection = Arcade::Input::UP;
@@ -48,12 +48,12 @@ namespace Arcade {
 
     void Snake::buildMap() {
         for (int x = 0; x <= _map_size; x++) {
-            _entities.push_back({{x, 0}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
-            _entities.push_back({{x, _map_size}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
+            _entities.push_back({{x + _offsetX, 0 + _offsetY}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
+            _entities.push_back({{x + _offsetX, _map_size + _offsetY}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
         }
         for (int y = 0; y < _map_size; y++) {
-            _entities.push_back({{0, y}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
-            _entities.push_back({{_map_size, y}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
+            _entities.push_back({{0 + _offsetX, y + _offsetY}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
+            _entities.push_back({{_map_size + _offsetX, y + _offsetY}, '#', Arcade::Color::BLUE, "./src/games/Snake/assets/brick.png"});
         }
     }
 
@@ -62,7 +62,7 @@ namespace Arcade {
         int newX = (std::rand() % (_map_size - 2)) + 1;
         int newY = (std::rand() % (_map_size - 2)) + 1;
         
-        _apple = {newX, newY};
+        _apple = {newX + _offsetX, newY + _offsetY};
     }
 
     void Snake::handleInput(Arcade::Input input)
@@ -88,7 +88,7 @@ namespace Arcade {
             }
         }
         
-        if (head.x <= 0 || head.x >= _map_size || head.y <= 0 || head.y >= _map_size) {
+        if (head.x <= _offsetX || head.x >= _map_size + _offsetX || head.y <= _offsetY || head.y >= _map_size + _offsetY) {
             _isGameOver = true;
             _isRunning = false;
             return;

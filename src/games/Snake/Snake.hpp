@@ -54,6 +54,9 @@ namespace Arcade {
             bool _isRunning;
             bool _isGameOver;
             bool _isWin;
+
+            int _offsetX;
+            int _offsetY;
     };
 }
 
