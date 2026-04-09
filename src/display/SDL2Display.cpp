@@ -70,6 +70,13 @@ namespace Arcade {
         if (TTF_WasInit()) {
             TTF_Quit();
         }
+
+        for (auto const& [key, texture] : _textures) {
+            if (texture) {
+                SDL_DestroyTexture(texture);
+            }
+        }
+        _textures.clear();
         
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
@@ -106,16 +113,48 @@ namespace Arcade {
         }
     }
 
-    void SDL2Display::drawObject(const Arcade::Object &object)
+    void Arcade::SDL2Display::drawObject(const Arcade::Object &object)
     {
-        SDL_Rect rect;
-        rect.x = object.pos.x * _tileSize;
-        rect.y = object.pos.y * _tileSize;
-        rect.w = _tileSize;
-        rect.h = _tileSize;
+        if (!_renderer)
+            return;
 
-        translateColor(object.color);
-        SDL_RenderFillRect(_renderer, &rect);
+        bool spriteDraw = false;
+
+        if (!object.sprite_path.empty()) {
+
+            if (_textures.find(object.sprite_path) == _textures.end()) {
+                SDL_Surface* surface = IMG_Load(object.sprite_path.c_str());
+
+                if (surface) {
+                    SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surface);
+                    _textures[object.sprite_path] = texture;
+                    SDL_FreeSurface(surface);
+                } else {
+                    std::cerr << "[SDL2] Error: Failed to load texture " << object.sprite_path << std::endl;
+                    _textures[object.sprite_path] = nullptr;
+                }
+            }
+
+            SDL_Texture* tex = _textures[object.sprite_path];
+            if (tex) {
+                SDL_Rect destRect;
+                destRect.x = object.pos.x * _tileSize;
+                destRect.y = object.pos.y * _tileSize;
+                destRect.w = _tileSize;
+                destRect.h = _tileSize;
+
+                SDL_RenderCopy(_renderer, tex, NULL, &destRect);
+
+                spriteDraw = true;
+            }
+        }
+
+        if (!spriteDraw) {
+            translateColor(object.color);
+
+            SDL_Rect rect = {object.pos.x * _tileSize, object.pos.y * _tileSize, _tileSize, _tileSize};
+            SDL_RenderFillRect(_renderer, &rect);
+        }
     }
 
     void SDL2Display::drawText(const std::string &text, const Arcade::Position &pos, const Arcade::Color &color)

@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <memory>
+#include <map>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
@@ -40,6 +41,7 @@ namespace Arcade {
             SDL_Renderer *_renderer;
             TTF_Font *_font;
             int _tileSize;
+            std::map<std::string, SDL_Texture*> _textures;
     };
 }
 
