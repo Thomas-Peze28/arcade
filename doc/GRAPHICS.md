@@ -46,6 +46,7 @@ Voici la liste des modules graphiques présents fourni avec le programme:
 - `NCURSES`
 - `SFML`
 - `SDL2`
+- `Allegro5`
 
 ---
 
