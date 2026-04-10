@@ -37,6 +37,6 @@ Pour lancer la borne d'arcade, exécutez le binaire en lui passant en paramètre
 
 ## Interface partagée 👥
 
-- @Fabien Skotarek
+- [@Fabien Skotarek](mailto:fabien.skotarek@epitech.eu)
 - @Enzo Sénéchal
-- [@Florent Windels](mailto:florent.windels@epitech.eu)
+- @Florent Windels
