@@ -40,7 +40,13 @@ SDL2_OBJ    =   $(SDL2_SRC:.cpp=.o)
 SDL2_LIB    =   $(LIB_DIR)arcade_sdl2.so
 SDL2_FLAGS  =   -lSDL2 -lSDL2_ttf -lSDL2_image
 
-GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB)
+# --- Allegro5 Configuration ---
+ALLEGRO5_SRC    =   src/display/Allegro5/Allegro5Display.cpp
+ALLEGRO5_OBJ    =   $(ALLEGRO5_SRC:.cpp=.o)
+ALLEGRO5_LIB    =   $(LIB_DIR)arcade_allegro5.so
+ALLEGRO5_FLAGS  =   -lallegro -lallegro_primitives -lallegro_font -lallegro_ttf
+
+GRAPHICALS  =   $(NCURSES_LIB) $(SFML_LIB) $(SDL2_LIB) $(ALLEGRO5_LIB)
 
 # --- Games Configuration ---
 
@@ -84,14 +90,18 @@ $(SDL2_LIB): $(SDL2_OBJ)
 	$(CXX) -shared -o $@ $^ $(SDL2_FLAGS)
 	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 
-# Compilation Snake Game
+# Compilation Allegro5
+$(ALLEGRO5_LIB): $(ALLEGRO5_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^ $(ALLEGRO5_FLAGS)
+	@printf "$(GREEN)[OK]$(RESET) Library '$@' compiled successfully.\n"
 $(SNAKE_LIB): $(SNAKE_OBJ)
 	@mkdir -p $(LIB_DIR)
 	$(CXX) -shared -o $@ $^
 	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
 
 clean:
-	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SDL2_OBJ) $(SNAKE_OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SDL2_OBJ) $(ALLEGRO5_OBJ) $(SNAKE_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean
