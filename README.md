@@ -1,72 +1,42 @@
-# Arcade
+# 🕹️ Arcade - Projet C++
 
-A retro gaming platform built in C++ using dynamic libraries loaded at runtime.
+Bienvenue sur le projet Arcade ! Ce projet est une borne d'arcade modulaire développée en C++20. 
+L'objectif principal est de fournir une architecture permettant de charger dynamiquement des jeux et des bibliothèques graphiques à l'exécution, sans jamais avoir à recompiler le programme principal grâce à l'utilisation des librairies dynamiques.
 
-## Build
+## 📚 Sommaire de la documentation
+
+* **[🎮 Contrôles](doc/CONTROLS.md)** : Présentation des contrôles et touches pris en charge.
+
+* **[👾 Créer un Jeu (API IGame)](doc/GAMES.md)** : Indication sur l'implémentation de nouveaux jeux.
+
+* **[📺 Créer un Module Graphique (API IDisplay)](doc/GRAPHICS.md)** : Indication sur l'implémentation de nouveaux modules graphiques.
+
+## 🚀 Compilation
+
+Le projet utilise un `Makefile` standard. À la racine du projet, vous pouvez utiliser les commandes suivantes :
+
+- `make` : Compile l'intégralité du projet (Core, Jeux et Graphismes).
+- `make core` : Compile uniquement l'exécutable principal.
+- `make games` : Compile les librairies de jeux (ex: Snake) dans le dossier `./lib/`.
+- `make graphicals` : Compile les librairies d'affichage (SFML, SDL2, Ncurses) dans le dossier `./lib/`.
+- `make re` : Nettoie et recompile tout le projet.
+
+## 🎮 Utilisation
+
+Pour lancer la borne d'arcade, exécutez le binaire en lui passant en paramètre une librairie graphique initiale :
 
 ```bash
-mkdir -p build
-cd build
-cmake ..
-cmake --build .
-cd ..
+./arcade [graphic_lib.so]
 ```
 
-This generates the `arcade` binary and all `.so` libraries in `./lib/`.
+## Auteurs 👥
 
-## Usage
+- [@Romane Cauvez](https://github.com/Romanecauvez)
+- [@Thomas Peze](https://github.com/Thomas-Peze28)
+- [@Jean-Baptise Lamy-Floret](https://github.com/007TheSpectre)
 
-```bash
-./arcade ./lib/arcade_ncurses.so
-```
+## Interface partagée 👥
 
-Pass any graphical library as the startup argument. You can switch libraries at runtime using the keybindings below.
-
-## Keybindings
-
-| Key | Action |
-|-----|--------|
-| `F1` | Previous graphical library |
-| `F2` | Next graphical library |
-| `F3` | Previous game |
-| `F4` | Next game |
-| `R` | Restart current game |
-| `M` | Go back to menu |
-| `Escape` | Exit |
-
-## Graphical libraries
-
-| Library | File |
-|---------|------|
-| nCurses | `lib/arcade_ncurses.so` |
-| SDL2 | `lib/arcade_sdl2.so` |
-| SFML | `lib/arcade_sfml.so` |
-
-## Games
-
-| Game | File |
-|------|------|
-| Snake | `lib/arcade_snake.so` |
-| Minesweeper | `lib/arcade_minesweeper.so` |
-
-## Project structure
-
-```
-.
-├── CMakeLists.txt
-├── src/
-│   └── core/
-├── lib/
-│   ├── arcade_ncurses.so
-│   ├── arcade_sdl2.so
-│   ├── arcade_sfml.so
-│   └── ...
-├── doc/
-│   └── ...
-└── README.md
-```
-
-## Authors
-
-- jean-baptiste.lamy-floret@epitech.eu
-
+- [@Fabien Skotarek](mailto:fabien.skotarek@epitech.eu)
+- @Enzo Sénéchal
+- @Florent Windels
