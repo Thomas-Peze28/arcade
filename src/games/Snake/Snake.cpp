@@ -148,6 +148,13 @@ namespace Arcade {
         _entities.push_back(appleObj);
 
         for (const auto& part : _body) {
+            if (_body.front().x == part.x && _body.front().y == part.y) {
+                Arcade::Object headObj = {
+                    part, '@', Arcade::Color::GREEN, "./src/games/Snake/assets/head.png"
+                };
+                _entities.push_back(headObj);
+                continue;
+            }
             Arcade::Object snakeObj = {
                 part, '#', Arcade::Color::GREEN, ""
             };
