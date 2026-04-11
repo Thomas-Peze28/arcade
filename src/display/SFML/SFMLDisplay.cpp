@@ -105,10 +105,15 @@ namespace Arcade {
         }
 
         if (!spriteDraw) {
-            sf::RectangleShape rect(sf::Vector2f(_scale, _scale));
-            rect.setPosition(object.pos.x * _scale, object.pos.y * _scale);
-            rect.setFillColor(translateColor(object.color));
-            _window->draw(rect);
+            if (!_fontLoaded)
+                return;
+            sf::Text text;
+            text.setFont(_font);
+            text.setString(std::string(1, object.character));
+            text.setCharacterSize(_scale);
+            text.setFillColor(translateColor(object.color));
+            text.setPosition(object.pos.x * _scale, object.pos.y * _scale);
+            _window->draw(text);
         }
     }
 

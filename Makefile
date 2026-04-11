@@ -55,7 +55,12 @@ SNAKE_SRC   =   src/games/Snake/Snake.cpp
 SNAKE_OBJ   =   $(SNAKE_SRC:.cpp=.o)
 SNAKE_LIB   =   $(LIB_DIR)arcade_snake.so
 
-GAMES       =   $(SNAKE_LIB)
+# --- Minesweeper Game Configuration ---
+MINESWEEPER_SRC =   src/games/Minesweeper/Minesweeper.cpp
+MINESWEEPER_OBJ =   $(MINESWEEPER_SRC:.cpp=.o)
+MINESWEEPER_LIB =   $(LIB_DIR)arcade_minesweeper.so
+
+GAMES       =   $(SNAKE_LIB) $(MINESWEEPER_LIB)
 
 .SILENT:
 
@@ -100,8 +105,13 @@ $(SNAKE_LIB): $(SNAKE_OBJ)
 	$(CXX) -shared -o $@ $^
 	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
 
+$(MINESWEEPER_LIB): $(MINESWEEPER_OBJ)
+	@mkdir -p $(LIB_DIR)
+	$(CXX) -shared -o $@ $^
+	@printf "$(GREEN)[OK]$(RESET) Game '$@' compiled successfully.\n"
+
 clean:
-	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SDL2_OBJ) $(ALLEGRO5_OBJ) $(SNAKE_OBJ)
+	rm -f $(OBJ) $(NCURSES_OBJ) $(SFML_OBJ) $(SDL2_OBJ) $(ALLEGRO5_OBJ) $(SNAKE_OBJ) $(MINESWEEPER_OBJ)
 	@printf "$(BLUE)[INFO]$(RESET) Object files removed.\n"
 
 fclean: clean

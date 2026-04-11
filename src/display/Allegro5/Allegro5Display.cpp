@@ -51,6 +51,10 @@ namespace Arcade {
     {
         if (_font)
             al_destroy_font(_font);
+        for (auto &[path, bmp] : _bitmaps)
+            if (bmp)
+                al_destroy_bitmap(bmp);
+        _bitmaps.clear();
         if (_event_queue)
             al_destroy_event_queue(_event_queue);
         if (_display)
@@ -92,9 +96,24 @@ namespace Arcade {
 
     void Allegro5Display::drawObject(const Arcade::Object &object)
     {
-        al_draw_filled_rectangle(object.pos.x * _scale, object.pos.y * _scale, 
-                                 object.pos.x * _scale + _scale, object.pos.y * _scale + _scale,
-                                 translateColor(object.color));
+        if (!object.sprite_path.empty()) {
+            if (_bitmaps.find(object.sprite_path) == _bitmaps.end())
+                _bitmaps[object.sprite_path] = al_load_bitmap(object.sprite_path.c_str());
+            ALLEGRO_BITMAP *bmp = _bitmaps[object.sprite_path];
+            if (bmp) {
+                al_draw_scaled_bitmap(bmp, 0, 0,
+                    al_get_bitmap_width(bmp), al_get_bitmap_height(bmp),
+                    object.pos.x * _scale, object.pos.y * _scale,
+                    _scale, _scale, 0);
+                return;
+            }
+        }
+        if (_font) {
+            char buf[2] = {object.character, '\0'};
+            al_draw_text(_font, translateColor(object.color),
+                         object.pos.x * _scale, object.pos.y * _scale,
+                         ALLEGRO_ALIGN_LEFT, buf);
+        }
     }
 
     void Allegro5Display::drawText(const std::string &text, const Arcade::Position &pos, const Arcade::Color &color)

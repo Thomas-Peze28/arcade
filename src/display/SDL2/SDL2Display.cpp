@@ -150,10 +150,28 @@ namespace Arcade {
         }
 
         if (!spriteDraw) {
-            translateColor(object.color);
-
-            SDL_Rect rect = {object.pos.x * _tileSize, object.pos.y * _tileSize, _tileSize, _tileSize};
-            SDL_RenderFillRect(_renderer, &rect);
+            if (!_font)
+                return;
+            SDL_Color textColor = {255, 255, 255, 255};
+            switch (object.color) {
+                case Color::RED:   textColor = {255, 0,   0,   255}; break;
+                case Color::GREEN: textColor = {0,   255, 0,   255}; break;
+                case Color::BLUE:  textColor = {0,   0,   255, 255}; break;
+                case Color::BLACK: textColor = {50,  50,  50,  255}; break;
+                case Color::WHITE: textColor = {255, 255, 255, 255}; break;
+            }
+            char buf[2] = {object.character, '\0'};
+            SDL_Surface *surface = TTF_RenderText_Solid(_font, buf, textColor);
+            if (!surface)
+                return;
+            SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+            if (texture) {
+                SDL_Rect destRect = {object.pos.x * _tileSize, object.pos.y * _tileSize,
+                                     _tileSize, _tileSize};
+                SDL_RenderCopy(_renderer, texture, nullptr, &destRect);
+                SDL_DestroyTexture(texture);
+            }
+            SDL_FreeSurface(surface);
         }
     }
 

@@ -1,0 +1,135 @@
+[
+  {
+    "file": "src/Arcade.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/Arcade.o",
+      "src/Arcade.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/Arcade.o"
+  },
+  {
+    "file": "src/games/Snake/Snake.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/games/Snake/Snake.o",
+      "src/games/Snake/Snake.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/games/Snake/Snake.o"
+  },
+  {
+    "file": "src/games/Minesweeper/Minesweeper.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/games/Minesweeper/Minesweeper.o",
+      "src/games/Minesweeper/Minesweeper.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/games/Minesweeper/Minesweeper.o"
+  },
+  {
+    "file": "src/display/Ncurses/NcursesDisplay.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/display/Ncurses/NcursesDisplay.o",
+      "src/display/Ncurses/NcursesDisplay.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/display/Ncurses/NcursesDisplay.o"
+  },
+  {
+    "file": "src/display/SFML/SFMLDisplay.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/display/SFML/SFMLDisplay.o",
+      "src/display/SFML/SFMLDisplay.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/display/SFML/SFMLDisplay.o"
+  },
+  {
+    "file": "src/display/SDL2/SDL2Display.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/display/SDL2/SDL2Display.o",
+      "src/display/SDL2/SDL2Display.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/display/SDL2/SDL2Display.o"
+  },
+  {
+    "file": "src/display/Allegro5/Allegro5Display.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wextra",
+      "-Wall",
+      "-std=c++20",
+      "-fno-gnu-unique",
+      "-fPIC",
+      "-I",
+      "./include/",
+      "-c",
+      "-o",
+      "src/display/Allegro5/Allegro5Display.o",
+      "src/display/Allegro5/Allegro5Display.cpp"
+    ],
+    "directory": "/home/thespectre/projects/G-OOP-400-LIL-4-1-arcade-15",
+    "output": "src/display/Allegro5/Allegro5Display.o"
+  }
+]
