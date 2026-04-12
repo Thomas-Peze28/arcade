@@ -35,6 +35,7 @@ extern "C" {
 Voici la liste des jeux présents fourni avec le programme:
 
 - `Snake`
+- `Minesweeper`
 
 ---
 
